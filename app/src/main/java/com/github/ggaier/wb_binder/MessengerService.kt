@@ -13,6 +13,7 @@ import android.util.Log
  * Created by wenbo, 2019/3/14
  */
 const val MSG_RANDOM_SALT = 1
+
 class MessengerService() : Service() {
 
     private lateinit var messager: Messenger
@@ -30,7 +31,7 @@ class MessengerService() : Service() {
             if (msg == null) return
             when (msg.what) {
                 MSG_RANDOM_SALT ->
-                    randomeMessage()
+                    msg.replyTo?.send(Message.obtain(null, MSG_SHOW_RANDOM_SALT, randomMessage()))
                 else -> super.handleMessage(msg)
             }
         }
