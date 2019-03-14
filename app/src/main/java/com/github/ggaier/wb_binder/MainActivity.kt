@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         localBinder.setOnClickListener {
-            bindingServiceLocally()
+            generateRandomMsgLocally()
         }
     }
 
@@ -32,9 +32,13 @@ class MainActivity : AppCompatActivity() {
             localBinderService = (service as? LocalBinderService.LocalBinder)?.getService()
         }
     }
-    private fun bindingServiceLocally() {
-        Intent(this, LocalBinderService::class.java).also {
-            bindService(it, localServiceConnection, Context.BIND_AUTO_CREATE)
+    private fun generateRandomMsgLocally() {
+        if (localBinderService == null) {
+            Intent(this, LocalBinderService::class.java).also {
+                bindService(it, localServiceConnection, Context.BIND_AUTO_CREATE)
+            }
+        } else {
+            Log.d(TAG, "${localBinderService?.randomMessage()}")
         }
     }
 }
