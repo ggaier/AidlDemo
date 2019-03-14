@@ -5,13 +5,13 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
-import java.util.*
 
 /**
  * Created by wenbo, 2019/3/13
  */
 const val TAG = "ggaier_binder"
-class LocalBinderService: Service(){
+
+class LocalBinderService : Service() {
 
     private val binder = LocalBinder()
 
@@ -26,15 +26,8 @@ class LocalBinderService: Service(){
     /**
      * 随机的发送一个消息
      */
-    fun randomMessage() : String {
-        val SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-        val salt = StringBuilder().append("LocalBinder says: ")
-        val rnd = Random()
-        while (salt.length < 18) { // length of the random string.
-            val index = (rnd.nextFloat() * SALTCHARS.length).toInt()
-            salt.append(SALTCHARS[index])
-        }
-        return salt.toString()
+    fun randomMessage(): String {
+        return "LocalBinder says: ${randomMessage()}"
     }
 
 
@@ -43,7 +36,7 @@ class LocalBinderService: Service(){
         Log.d(TAG, "BinderService onDestroy")
     }
 
-    inner class LocalBinder(): Binder(){
+    inner class LocalBinder() : Binder() {
         fun getService() = this@LocalBinderService
     }
 

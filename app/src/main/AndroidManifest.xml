@@ -21,6 +21,10 @@
         </activity>
 
         <service android:name=".LocalBinderService"/>
+
+        <service
+            android:name=".MessengerService"
+            android:process=":messengerService"/>
     </application>
 
 </manifest>
