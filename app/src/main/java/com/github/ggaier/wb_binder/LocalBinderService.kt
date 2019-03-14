@@ -27,7 +27,7 @@ class LocalBinderService : Service() {
      * 随机的发送一个消息
      */
     fun randomMessage(): String {
-        return "LocalBinder says: ${randomMessage()}"
+        return "LocalBinder says: ${generateRandomMessage()}"
     }
 
 

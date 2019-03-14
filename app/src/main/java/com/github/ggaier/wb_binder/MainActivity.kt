@@ -1,5 +1,6 @@
 package com.github.ggaier.wb_binder
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -10,7 +11,7 @@ import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
-fun randomMessage(): String{
+fun generateRandomMessage(): String{
     val SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
     val salt = StringBuilder()
     val rnd = Random()
@@ -35,11 +36,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private val clientMessenger: Messenger = Messenger(object: Handler(){
+    private val clientMessenger: Messenger = Messenger(@SuppressLint("HandlerLeak") object: Handler(){
         override fun handleMessage(msg: Message?) {
             when(msg?.what){
                 MSG_SHOW_RANDOM_SALT ->
-                    Log.d(TAG, "${msg.obj}")
+                    Log.d(TAG, "${(msg.obj as Bundle)["data"]}")
             }
         }
     })
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.d(TAG, "messengerService onServiceConnected: $name, $service")
             messengerService = Messenger(service)
         }
     }
