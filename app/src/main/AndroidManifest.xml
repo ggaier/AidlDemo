@@ -25,6 +25,10 @@
         <service
             android:name=".MessengerService"
             android:process=":messengerService"/>
+
+        <service android:name=".AidlSaltService"
+                 android:process=":aidlService"/>
+
     </application>
 
 </manifest>
