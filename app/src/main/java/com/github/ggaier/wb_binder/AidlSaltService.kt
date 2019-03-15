@@ -11,6 +11,12 @@ import android.util.Log
 class AidlSaltService : Service() {
 
     private val binder = object : ISaltGeneratorInterface.Stub() {
+        override fun syncGenerateSalt(prefix: String?): String {
+            Log.d(TAG, "AidlSaltService thread sync: ${Thread.currentThread()}")
+            Thread.sleep(2000)
+            return prefix + generateRandomMessage()
+        }
+
         override fun generateSalt(prefix: String?, listener: ISaltListener?) {
             val result = prefix + generateRandomMessage()
             Log.d(TAG, "AidlSaltService thread: ${Thread.currentThread()}")

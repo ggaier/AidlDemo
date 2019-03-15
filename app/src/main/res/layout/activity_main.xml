@@ -37,5 +37,15 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/messengerBound"/>
 
+    <Button
+        android:id="@+id/aidlBound2"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RemoteService-AIDL-Sync"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/aidlBound"/>
+
 
 </android.support.constraint.ConstraintLayout>

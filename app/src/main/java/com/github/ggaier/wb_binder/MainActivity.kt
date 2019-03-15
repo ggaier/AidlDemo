@@ -40,30 +40,35 @@ class MainActivity : AppCompatActivity() {
             generateSaltViaAidl()
         }
 
+        aidlBound2.setOnClickListener {
+            generateSaltViaAidlSync()
+        }
+
+    }
+
+    private fun generateSaltViaAidlSync() {
+        if (saltService == null) {
+            bindServiceUseAldl()
+        } else {
+            try {
+                Log.d(TAG, "AidlSaltService say: "+saltService?.syncGenerateSalt("")+", ${Thread.currentThread()}")
+            } catch (e: DeadObjectException) {
+                e.printStackTrace()
+            } catch (se: SecurityException){
+                se.printStackTrace()
+            }
+        }
     }
 
     private val saltServiceListener: ISaltListener = object: ISaltListener.Stub(){
         override fun onSaltGened(salt: String?) {
-            Log.d(TAG, "ISaltListener onSaltGened: $salt")
+            Log.d(TAG, "ISaltListener onSaltGened: $salt, on Thread: ${Thread.currentThread()}")
         }
     }
     private var saltService: ISaltGeneratorInterface? = null
     private fun generateSaltViaAidl() {
         if (saltService == null) {
-            Intent(this, AidlSaltService::class.java).also {
-                bindService(it, object : ServiceConnection {
-                    override fun onServiceDisconnected(name: ComponentName?) {
-                        Log.d(TAG, "AidlSaltService onServiceDisconnected: $name")
-                        saltService = null
-                    }
-
-                    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                        Log.d(TAG, "AidlSaltService binder descriptor: ${service?.interfaceDescriptor}")
-                        saltService = ISaltGeneratorInterface.Stub.asInterface(service)
-                    }
-
-                }, Context.BIND_AUTO_CREATE)
-            }
+            bindServiceUseAldl()
         } else {
             try {
                 saltService?.generateSalt("AidlSaltService say: ", saltServiceListener)
@@ -72,6 +77,27 @@ class MainActivity : AppCompatActivity() {
             } catch (se: SecurityException){
                 se.printStackTrace()
             }
+        }
+    }
+
+    private fun bindServiceUseAldl() {
+        Intent(this, AidlSaltService::class.java).also {
+            bindService(it, object : ServiceConnection {
+                override fun onServiceDisconnected(name: ComponentName?) {
+                    Log.d(TAG, "AidlSaltService onServiceDisconnected: $name")
+                    saltService = null
+                }
+
+                override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                    Log.d(
+                        TAG, "AidlSaltService binder descriptor: ${service?.interfaceDescriptor}, $service, " +
+                                "$name"
+                    )
+                    saltService = ISaltGeneratorInterface.Stub.asInterface(service)
+                    Log.d(TAG, "salt service: $saltService")
+                }
+
+            }, Context.BIND_AUTO_CREATE)
         }
     }
 
